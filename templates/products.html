@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+{% block content %}
+<h1 class="page-title">Products <span class="muted">({{ total }})</span></h1>
+
+<form class="filters" method="GET" action="{{ url_for('products') }}">
+    <input type="text" name="q" placeholder="Search products" value="{{ request.args.get('q','') }}">
+    <select name="category">
+        <option value="">All categories</option>
+        {% for c in categories_nav %}
+        <option value="{{ c.slug }}" {% if request.args.get('category')==c.slug %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+    </select>
+    <select name="sort">
+        <option value="newest" {% if request.args.get('sort','newest')=='newest' %}selected{% endif %}>Newest</option>
+        <option value="price_asc" {% if request.args.get('sort')=='price_asc' %}selected{% endif %}>Price: low to high</option>
+        <option value="price_desc" {% if request.args.get('sort')=='price_desc' %}selected{% endif %}>Price: high to low</option>
+        <option value="name" {% if request.args.get('sort')=='name' %}selected{% endif %}>Name</option>
+    </select>
+    <button class="btn sm" type="submit">Apply</button>
+</form>
+
+{% if products %}
+<div class="grid">
+    {% for p in products %}{% include "_product_card.html" %}{% endfor %}
+</div>
+
+{% if pages > 1 %}
+<div class="pagination">
+    {% for n in range(1, pages + 1) %}
+        {% set qs = {'q': request.args.get('q',''), 'category': request.args.get('category',''), 'sort': request.args.get('sort',''), 'page': n} %}
+        <a class="page-link {% if n == page %}active{% endif %}"
+           href="{{ url_for('products', **qs) }}">{{ n }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+{% else %}
+<p class="muted">No products match your search.</p>
+{% endif %}
+{% endblock %}

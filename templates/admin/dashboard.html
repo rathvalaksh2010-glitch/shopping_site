@@ -1,0 +1,48 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block admin_content %}
+<h1 class="page-title">Dashboard</h1>
+
+<div class="stat-grid">
+    <div class="stat"><span class="stat-num">{{ stats.orders }}</span><span>Orders</span></div>
+    <div class="stat"><span class="stat-num">{{ stats.customers }}</span><span>Customers</span></div>
+    <div class="stat"><span class="stat-num">{{ stats.products }}</span><span>Products</span></div>
+    <div class="stat"><span class="stat-num">{{ stats.revenue|inr }}</span><span>Revenue</span></div>
+</div>
+
+<div class="two-col">
+    <section class="panel">
+        <h2>Low stock alerts</h2>
+        {% if low_stock %}
+        <table class="table">
+            <thead><tr><th>Product</th><th>Available</th><th>Threshold</th></tr></thead>
+            <tbody>
+            {% for r in low_stock %}
+                <tr><td><a href="{{ url_for('admin_product_edit', pid=r.id) }}">{{ r.name }}</a></td>
+                    <td class="warn">{{ r.quantity_available }}</td><td>{{ r.low_stock_threshold }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}<p class="muted">All products are sufficiently stocked.</p>{% endif %}
+    </section>
+
+    <section class="panel">
+        <h2>Recent orders</h2>
+        <table class="table">
+            <thead><tr><th>Order</th><th>Status</th><th>Total</th></tr></thead>
+            <tbody>
+            {% for o in recent %}
+                <tr>
+                    <td><a href="{{ url_for('admin_order', oid=o.id) }}">{{ o.order_number }}</a></td>
+                    <td><span class="badge status-{{ o.status|lower }}">{{ o.status }}</span></td>
+                    <td>{{ o.total_amount|inr }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="3" class="muted">No orders yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a class="btn sm" href="{{ url_for('admin_orders') }}">View all orders</a>
+    </section>
+</div>
+{% endblock %}

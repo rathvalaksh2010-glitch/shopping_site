@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<nav class="breadcrumb">
+    <a href="{{ url_for('products') }}">Products</a>
+    {% if product.category_slug %}
+    / <a href="{{ url_for('category', slug=product.category_slug) }}">{{ product.category_name }}</a>
+    {% endif %}
+    / <span>{{ product.name }}</span>
+</nav>
+
+<div class="detail">
+    <div class="detail-media">
+        <div class="thumb lg">
+            {% if product.image_path %}<img src="{{ url_for('static', filename=product.image_path) }}" alt="{{ product.name }}">{% else %}<span>{{ product.name[0] }}</span>{% endif %}
+        </div>
+    </div>
+    <div class="detail-info">
+        <h1>{{ product.name }}</h1>
+        <p class="price lg">{{ product.price|inr }}</p>
+        <p class="stock {% if product.available <= 0 %}out{% endif %}">
+            {% if product.available > 0 %}In stock ({{ product.available }}){% else %}Out of stock{% endif %}
+            {% if product.available <= product.low_stock_threshold and product.available > 0 %}
+                &middot; <em>Only a few left</em>
+            {% endif %}
+        </p>
+        <p class="desc">{{ product.description }}</p>
+
+        {% if product.available > 0 %}
+        <form action="{{ url_for('cart_add') }}" method="POST" class="add-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <label>Quantity
+                <input type="number" name="quantity" value="1" min="1" max="{{ product.available }}">
+            </label>
+            <button class="btn" type="submit">Add to cart</button>
+        </form>
+        {% else %}
+        <p><button class="btn" disabled>Out of stock</button></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

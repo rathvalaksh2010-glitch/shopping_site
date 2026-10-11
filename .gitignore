@@ -1,0 +1,6 @@
+inventory.db
+instance/
+static/uploads/
+.env
+__pycache__/
+*.pyc

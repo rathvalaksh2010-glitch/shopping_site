@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fresh Kitchen | Direct Online Ordering</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Top Opening Special Banner -->
+  <div class="promo-banner">
+    🎉 GRAND OPENING: Use code <strong>FIRSTORDER</strong> for 15% OFF your first direct order!
+  </div>
+
+  <!-- Header -->
+  <header class="navbar">
+    <div class="logo">🍳 Fresh Kitchen</div>
+    <div class="cart-btn-container">
+      <button id="cart-btn">🛒 Cart (<span id="cart-count">0</span>)</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Skip Commission Fees. Order Direct!</h1>
+    <p>Enjoy fresh, chef-prepared meals delivered fast to your doorstep.</p>
+    <a href="#menu" class="cta-btn">View Menu & Order</a>
+  </section>
+
+  <!-- Menu Section -->
+  <section id="menu" class="menu-section">
+    <h2>Popular Dishes</h2>
+    <div class="menu-grid" id="menu-grid">
+      <!-- Items dynamically populated via JavaScript -->
+    </div>
+  </section>
+
+  <!-- Cart Modal -->
+  <div id="cart-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" id="close-modal">&times;</span>
+      <h2>Your Order</h2>
+      <ul id="cart-items" class="cart-items"></ul>
+      
+      <div class="cart-summary">
+        <p>Subtotal: <span id="cart-subtotal">$0.00</span></p>
+        <div class="promo-box">
+          <input type="text" id="promo-code" placeholder="Enter promo code" />
+          <button id="apply-promo">Apply</button>
+        </div>
+        <p class="discount-text" id="discount-text" style="display: none; color: green;"></p>
+        <h3>Total: <span id="cart-total">$0.00</span></h3>
+      </div>
+
+      <!-- Checkout Form -->
+      <form id="checkout-form" class="checkout-form">
+        <h3>Delivery Details</h3>
+        <input type="text" id="cust-name" placeholder="Your Full Name" required />
+        <input type="tel" id="cust-phone" placeholder="Phone / WhatsApp Number" required />
+        <textarea id="cust-address" placeholder="Delivery Address" required></textarea>
+        <button type="submit" class="whatsapp-btn">📲 Complete Order via WhatsApp</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

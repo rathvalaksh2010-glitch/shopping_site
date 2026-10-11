@@ -1,0 +1,36 @@
+{% extends "admin/base.html" %}
+{% block title %}Categories{% endblock %}
+{% block admin_content %}
+<h1 class="page-title">Categories</h1>
+
+<div class="two-col">
+    <section class="panel">
+        <h2>Existing categories</h2>
+        <table class="table">
+            <thead><tr><th>Name</th><th>Slug</th><th>Products</th><th>Active</th></tr></thead>
+            <tbody>
+            {% for c in categories %}
+            <tr>
+                <td>{{ c.name }}</td>
+                <td class="muted">{{ c.slug }}</td>
+                <td>{{ c.product_count }}</td>
+                <td>{% if c.is_active %}Yes{% else %}<span class="muted">No</span>{% endif %}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="muted">No categories yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="panel">
+        <h2>Add category</h2>
+        <form method="POST" class="stack">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label>Name <input type="text" name="name" required></label>
+            <label>Description <textarea name="description" rows="3"></textarea></label>
+            <button class="btn" type="submit">Create category</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

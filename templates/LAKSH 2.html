@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshBites - Online Food Delivery</title>
+    <style>
+        :root {
+            --primary: #ff4757;
+            --secondary: #2ed573;
+            --dark: #2f3542;
+            --light: #f1f2f6;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light); color: var(--dark); padding-bottom: 50px; }
+        header { background: var(--dark); color: white; padding: 20px; text-align: center; }
+        header h1 { color: var(--primary); margin-bottom: 5px; }
+        
+        .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        @media(max-width: 768px) { .container { grid-template-columns: 1fr; } }
+        
+        .section-title { font-size: 1.3rem; margin-bottom: 15px; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+        
+        .menu-category { margin-bottom: 20px; }
+        .menu-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .food-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
+        .food-card h4 { font-size: 1.1rem; margin-bottom: 5px; }
+        .food-card p { color: #666; font-size: 0.9rem; margin-bottom: 10px; }
+        .food-card .price { font-weight: bold; color: var(--primary); margin-bottom: 10px; }
+        .food-card button { background: var(--primary); color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        .food-card button:hover { background: #ff6b81; }
+
+        .cart-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 20px; }
+        .cart-items { list-style: none; margin-bottom: 15px; max-height: 200px; overflow-y: auto; }
+        .cart-items li { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+        
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 0.85rem; margin-bottom: 3px; font-weight: 600; }
+        .form-group input, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; }
+        
+        .totals { margin-top: 15px; border-top: 1px solid #ddd; padding-top: 10px; font-size: 0.95rem; }
+        .totals div { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .totals .grand-total { font-weight: bold; font-size: 1.1rem; color: var(--dark); }
+        
+        .checkout-btn { background: var(--secondary); color: white; border: none; width: 100%; padding: 12px; border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .checkout-btn:hover { background: #20bf6b; }
+
+        /* Receipt Modal */
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 400px; text-align: left; }
+        .modal-content h3 { color: var(--secondary); margin-bottom: 10px; }
+        .modal-content pre { background: var(--light); padding: 10px; border-radius: 4px; font-size: 0.85rem; margin: 15px 0; overflow-x: auto; }
+        .modal-content button { background: var(--dark); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🍔 FreshBites Delivery</h1>
+        <p>Order fresh food directly online!</p>
+    </header>
+
+    <div class="container">
+        <!-- Menu Section -->
+        <div class="menu-section">
+            <h2 class="section-title">Explore Menu</h2>
+            
+            <div class="menu-category">
+                <h3>Starters</h3>
+                <div class="menu-items" id="starters-list"></div>
+            </div>
+
+            <div class="menu-category">
+                <h3>Mains</h3>
+                <div class="menu-items" id="mains-list"></div>
+            </div>
+
+            <div class="menu-category">
+                <h3>Desserts</h3>
+                <div class="menu-items" id="desserts-list"></div>
+            </div>
+        </div>
+
+        <!-- Cart & Checkout Section -->
+        <div class="cart-box">
+            <h2 class="section-title">Your Order</h2>
+            <ul class="cart-items" id="cart-list">
+                <li style="color: #888; justify-content: center;">Your cart is empty</li>
+            </ul>
+
+            <div class="form-group">
+                <label>Promo Code (Try: WELCOME10)</label>
+                <input type="text" id="promo-input" placeholder="Enter code">
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="cust-name" placeholder="Rahul Sharma">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="cust-phone" placeholder="+91 98765 43210">
+            </div>
+            <div class="form-group">
+                <label>Delivery Address</label>
+                <textarea id="cust-address" rows="2" placeholder="Flat / Street / Area"></textarea>
+            </div>
+
+            <div class="totals">
+                <div><span>Subtotal:</span> <span id="subtotal-val">₹0</span></div>
+                <div><span>Discount:</span> <span id="discount-val">₹0</span></div>
+                <div><span>Delivery Fee:</span> <span id="delivery-val">₹50</span> <small style="color:gray">(Free > ₹500)</small></div>
+                <div class="grand-total"><span>Total:</span> <span id="total-val">₹0</span></div>
+            </div>
+
+            <button class="checkout-btn" onclick="placeOrder()">Place Order Now</button>
+        </div>
+    </div>
+
+    <!-- Success Receipt Modal -->
+    <div id="modal">
+        <div class="modal-content">
+            <h3>🎉 Order Placed Successfully!</h3>
+            <p>WhatsApp notification sent to kitchen & customer.</p>
+            <pre id="receipt-text"></pre>
+            <button onclick="closeModal()">Close & New Order</button>
+        </div>
+    </div>
+
+    <script>
+        // Menu Data
+        const menuData = {
+            Starters: { "Spring Rolls": 150, "Garlic Bread": 120 },
+            Mains: { "Margherita Pizza": 350, "Veg Burger": 200, "Pasta Alfredo": 300 },
+            Desserts: { "Chocolate Brownie": 140, "Ice Cream": 100 }
+        };
+
+        let cart = {};
+
+        // Render Menu on Page Load
+        function renderMenu() {
+            for (let category in menuData) {
+                let containerId = category.toLowerCase() + "-list";
+                let container = document.getElementById(containerId);
+                container.innerHTML = "";
+                
+                for (let item in menuData[category]) {
+                    let price = menuData[category][item];
+                    container.innerHTML += `
+                        <div class="food-card">
+                            <div>
+                                <h4>${item}</h4>
+                                <div class="price">₹${price}</div>
+                            </div>
+                            <button onclick="addToCart('${item}', ${price})">+ Add to Cart</button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function addToCart(item, price) {
+            if (cart[item]) {
+                cart[item].qty += 1;
+            } else {
+                cart[item] = { price: price, qty: 1 };
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            let cartList = document.getElementById("cart-list");
+            cartList.innerHTML = "";
+            
+            let subtotal = 0;
+            let itemCount = 0;
+
+            for (let item in cart) {
+                itemCount++;
+                let itemTotal = cart[item].price * cart[item].qty;
+                subtotal += itemTotal;
+                cartList.innerHTML += `
+                    <li>
+                        <span>${item} (x${cart[item].qty})</span>
+                        <span>₹${itemTotal}</span>
+                    </li>
+                `;
+            }
+
+            if (itemCount === 0) {
+                cartList.innerHTML = `<li style="color: #888; justify-content: center;">Your cart is empty</li>`;
+            }
+
+            // Calculations
+            let promo = document.getElementById("promo-input").value.trim().toUpperCase();
+            let discount = (promo === "WELCOME10") ? subtotal * 0.10 : 0;
+            let deliveryFee = (subtotal >= 500 || subtotal === 0) ? 0 : 50;
+            let grandTotal = subtotal - discount + deliveryFee;
+
+            document.getElementById("subtotal-val").innerText = `₹${subtotal}`;
+            document.getElementById("discount-val").innerText = `-₹${discount.toFixed(2)}`;
+            document.getElementById("delivery-val").innerText = `₹${deliveryFee}`;
+            document.getElementById("total-val").innerText = `₹${grandTotal.toFixed(2)}`;
+        }
+
+        // Listen to promo code typing changes
+        document.getElementById("promo-input").addEventListener("input", updateCartUI);
+
+        function placeOrder() {
+            if (Object.keys(cart).length === 0) {
+                alert("Please add items to your cart first!");
+                return;
+            }
+            let name = document.getElementById("cust-name").value;
+            let phone = document.getElementById("cust-phone").value;
+            let address = document.getElementById("cust-address").value;
+
+            if (!name || !phone || !address) {
+                alert("Please fill in your delivery name, phone, and address.");
+                return;
+            }
+
+            let subtotal = Object.values(cart).reduce((sum, i) => sum + (i.price * i.qty), 0);
+            let promo = document.getElementById("promo-input").value.trim().toUpperCase();
+            let discount = (promo === "WELCOME10") ? subtotal * 0.10 : 0;
+            let deliveryFee = (subtotal >= 500) ? 0 : 50;
+            let grandTotal = subtotal - discount + deliveryFee;
+
+            let orderReceipt = {
+                order_id: Math.floor(1000 + Math.random() * 9000),
+                time: new Date().toLocaleTimeString(),
+                customer: name,
+                phone: phone,
+                address: address,
+                items: cart,
+                grand_total: grandTotal.toFixed(2),
+                status: "Received & Sent to Kitchen 🟢"
+            };
+
+            document.getElementById("receipt-text").innerText = JSON.stringify(orderReceipt, null, 2);
+            document.getElementById("modal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+            cart = {};
+            document.getElementById("cust-name").value = "";
+            document.getElementById("cust-phone").value = "";
+            document.getElementById("cust-address").value = "";
+            document.getElementById("promo-input").value = "";
+            updateCartUI();
+        }
+
+        // Initialize App
+        renderMenu();
+    </script>
+</body>
+</html>

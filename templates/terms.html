@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Terms &amp; Conditions{% endblock %}
+{% block content %}
+<article class="legal">
+    <h1>Terms &amp; Conditions</h1>
+    <p>These terms govern your use of {{ shop.shop_name }}. By browsing or placing an order you agree to them.</p>
+
+    <h2>1. Shopping rules</h2>
+    <p>You must provide accurate account and delivery information. You are responsible for keeping your password confidential. Only available, active products can be purchased.</p>
+
+    <h2>2. Pricing and order acceptance</h2>
+    <p>All prices are listed in {{ shop.currency }} and include applicable display amounts. Orders are accepted only after the server verifies availability and recalculates the total. We may decline or cancel an order if a product is unavailable or a pricing error is detected.</p>
+
+    <h2>3. Payment</h2>
+    <p>The current payment method is Cash on Delivery (COD). Payment is collected when your order is delivered. An order marked delivered does not itself prove payment was collected.</p>
+
+    <h2>4. Shipping and delivery</h2>
+    <p>Delivery is managed manually and a shipping fee of {{ shop.shipping_fee|inr }} applies to each order. Delivery timelines are estimates and may vary by region.</p>
+
+    <h2>5. Returns, cancellations, and refunds</h2>
+    <p>You may cancel an eligible order while it has not yet shipped. Cancelling an order restores the reserved stock. Returns and refunds for eligible items are processed according to applicable consumer-protection rules.</p>
+
+    <h2>6. Customer responsibilities</h2>
+    <p>Do not misuse the site, attempt to access other users' accounts or orders, or interfere with normal operation. We may suspend accounts that violate these terms.</p>
+
+    <h2>7. Contact</h2>
+    <p>Questions? Email {{ shop.contact_email }} or call {{ shop.contact_phone }}.</p>
+</article>
+{% endblock %}

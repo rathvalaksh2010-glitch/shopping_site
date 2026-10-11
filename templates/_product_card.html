@@ -1,0 +1,22 @@
+<div class="card">
+    <a href="{{ url_for('product_detail', slug=p.slug) }}">
+        <div class="thumb">
+            {% if p.image_path %}<img src="{{ url_for('static', filename=p.image_path) }}" alt="{{ p.name }}">{% else %}<span>{{ p.name[0] }}</span>{% endif %}
+        </div>
+        <h3>{{ p.name }}</h3>
+    </a>
+    <p class="price">{{ p.price|inr }}</p>
+    {% if p.available is defined %}
+    <p class="stock {% if p.available <= 0 %}out{% endif %}">
+        {% if p.available > 0 %}In stock ({{ p.available }}){% else %}Out of stock{% endif %}
+    </p>
+    {% endif %}
+    {% if current_user and p.available is defined and p.available > 0 %}
+    <form action="{{ url_for('cart_add') }}" method="POST" class="add-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="product_id" value="{{ p.id }}">
+        <input type="hidden" name="next" value="{{ request.full_path }}">
+        <button class="btn sm" type="submit">Add to cart</button>
+    </form>
+    {% endif %}
+</div>

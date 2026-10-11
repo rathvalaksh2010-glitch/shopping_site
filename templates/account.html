@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}My Account{% endblock %}
+{% block content %}
+<h1 class="page-title">My Account</h1>
+<div class="two-col">
+    <section class="panel">
+        <h2>Profile</h2>
+        <p><strong>{{ current_user.name }}</strong><br>{{ current_user.email }}<br>
+        <span class="muted">Member since {{ current_user.created_at[:10] }}</span></p>
+
+        <h2>Change password</h2>
+        <form method="POST" action="{{ url_for('account_password') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label>Current password <input type="password" name="old_password" required></label>
+            <label>New password <input type="password" name="new_password" minlength="8" required></label>
+            <button class="btn" type="submit">Update password</button>
+        </form>
+
+        <h2>Quick links</h2>
+        <p><a href="{{ url_for('account_orders') }}">My orders</a> &middot; <a href="{{ url_for('cart') }}">Cart</a></p>
+    </section>
+
+    <section class="panel">
+        <h2>Delivery addresses</h2>
+        {% if addresses %}
+        <ul class="address-list">
+            {% for a in addresses %}
+            <li>
+                <strong>{{ a.recipient_name }}</strong> · {{ a.phone }}<br>
+                {{ a.address_line_1 }}{% if a.address_line_2 %}, {{ a.address_line_2 }}{% endif %}<br>
+                {{ a.city }}, {{ a.state }} {{ a.postal_code }}, {{ a.country }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="muted">No saved addresses.</p>
+        {% endif %}
+
+        <h3>Add an address</h3>
+        <form method="POST" action="{{ url_for('account_addresses') }}" class="stack">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label>Recipient name <input type="text" name="recipient_name" required></label>
+            <label>Phone <input type="text" name="phone" required></label>
+            <label>Address line 1 <input type="text" name="address_line_1" required></label>
+            <label>Address line 2 <input type="text" name="address_line_2"></label>
+            <label>City <input type="text" name="city" required></label>
+            <label>State <input type="text" name="state" required></label>
+            <label>Postal code <input type="text" name="postal_code" required></label>
+            <label>Country <input type="text" name="country" value="India"></label>
+            <button class="btn" type="submit">Save address</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

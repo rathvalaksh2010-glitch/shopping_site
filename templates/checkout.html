@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<h1 class="page-title">Checkout</h1>
+<form method="POST" class="two-col">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="checkout_token" value="{{ checkout_token }}">
+
+    <section class="panel">
+        <h2>Delivery address</h2>
+        {% if addresses %}
+        <div class="stack">
+            {% for a in addresses %}
+            <label class="radio">
+                <input type="radio" name="address_id" value="{{ a.id }}" {% if loop.first %}checked{% endif %}>
+                <span><strong>{{ a.recipient_name }}</strong>, {{ a.phone }}<br>
+                {{ a.address_line_1 }}{% if a.address_line_2 %}, {{ a.address_line_2 }}{% endif %},
+                {{ a.city }}, {{ a.state }} {{ a.postal_code }}</span>
+            </label>
+            {% endfor %}
+            <label class="radio">
+                <input type="radio" name="address_id" value="">
+                <span>Use a new address</span>
+            </label>
+        </div>
+        {% endif %}
+
+        <h3>{% if addresses %}New address{% else %}Delivery details{% endif %}</h3>
+        <div class="stack">
+            <label>Recipient name <input type="text" name="recipient_name" required></label>
+            <label>Phone <input type="text" name="phone" required></label>
+            <label>Address line 1 <input type="text" name="address_line_1" required></label>
+            <label>Address line 2 <input type="text" name="address_line_2"></label>
+            <label>City <input type="text" name="city" required></label>
+            <label>State <input type="text" name="state" required></label>
+            <label>Postal code <input type="text" name="postal_code" required></label>
+            <label>Country <input type="text" name="country" value="India"></label>
+        </div>
+    </section>
+
+    <aside class="panel summary">
+        <h2>Order summary</h2>
+        <ul class="summary-items">
+            {% for it in items %}
+            <li><span>{{ it.name }} × {{ it.quantity }}</span><span>{{ (it.price * it.quantity)|inr }}</span></li>
+            {% endfor %}
+        </ul>
+        <div class="row"><span>Subtotal</span><span>{{ subtotal|inr }}</span></div>
+        <div class="row"><span>Shipping</span><span>{{ shipping|inr }}</span></div>
+        <div class="row"><span>Tax ({{ shop.tax_percent }}%)</span><span>{{ tax|inr }}</span></div>
+        <div class="row total"><span>Total</span><span>{{ total|inr }}</span></div>
+        <p class="muted">Payment method: <strong>Cash on Delivery</strong></p>
+        <button class="btn full" type="submit">Place COD order</button>
+    </aside>
+</form>
+{% endblock %}

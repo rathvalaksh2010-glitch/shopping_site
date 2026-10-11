@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>Welcome to {{ shop.shop_name }}</h1>
+    <p>{{ shop.shop_description or "Discover quality products at great prices." }}</p>
+    <a class="btn" href="{{ url_for('products') }}">Shop now</a>
+</section>
+
+<section>
+    <h2 class="section-title">Shop by category</h2>
+    <div class="chip-row">
+        {% for c in categories_nav %}
+            <a class="chip" href="{{ url_for('category', slug=c.slug) }}">{{ c.name }}</a>
+        {% endfor %}
+    </div>
+</section>
+
+<section>
+    <h2 class="section-title">Featured products</h2>
+    {% if featured %}
+    <div class="grid">
+        {% for p in featured %}{% include "_product_card.html" %}{% endfor %}
+    </div>
+    {% else %}
+    <p class="muted">No products yet.</p>
+    {% endif %}
+</section>
+
+<section>
+    <h2 class="section-title">New arrivals</h2>
+    <div class="grid">
+        {% for p in recent %}{% include "_product_card.html" %}{% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy{% endblock %}
+{% block content %}
+<article class="legal">
+    <h1>Privacy Policy</h1>
+    <p>This policy explains what information {{ shop.shop_name }} collects and how it is used.</p>
+
+    <h2>1. Information we collect</h2>
+    <p>We collect the name, email address, phone number, and delivery address you provide when registering, saving an address, or placing an order.</p>
+
+    <h2>2. Purpose of collection</h2>
+    <p>We use this information to create and manage your account, process and deliver orders, provide support, and maintain an auditable record of orders and inventory.</p>
+
+    <h2>3. Data retention and deletion</h2>
+    <p>Order records are retained as required for accounting and legal purposes. Account information is retained while your account is active and deleted or anonymised on valid request, subject to legal obligations.</p>
+
+    <h2>4. Third-party services and payment providers</h2>
+    <p>Payment is currently Cash on Delivery, so no online payment provider receives your data. If online payment is added later, this policy will be updated before launch.</p>
+
+    <h2>5. Your rights and contact</h2>
+    <p>You may request access to, correction of, or deletion of your personal data. Contact us at {{ shop.contact_email }} or {{ shop.contact_phone }}. We restrict access to personal data and protect it in line with applicable data-protection rules.</p>
+</article>
+{% endblock %}

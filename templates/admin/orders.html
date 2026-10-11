@@ -1,0 +1,31 @@
+{% extends "admin/base.html" %}
+{% block title %}Orders{% endblock %}
+{% block admin_content %}
+<h1 class="page-title">Orders</h1>
+
+<div class="chip-row">
+    <a class="chip {% if not current_status %}active{% endif %}" href="{{ url_for('admin_orders') }}">All</a>
+    {% for s in statuses %}
+    <a class="chip {% if current_status == s %}active{% endif %}" href="{{ url_for('admin_orders', status=s) }}">{{ s }}</a>
+    {% endfor %}
+</div>
+
+<table class="table">
+    <thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Status</th><th>Payment</th><th>Total</th><th></th></tr></thead>
+    <tbody>
+    {% for o in orders %}
+        <tr>
+            <td>{{ o.order_number }}</td>
+            <td>{{ o.customer }}</td>
+            <td>{{ o.created_at[:10] }}</td>
+            <td><span class="badge status-{{ o.status|lower }}">{{ o.status }}</span></td>
+            <td><span class="badge cod-{{ o.cod_payment_status|lower }}">{{ o.cod_payment_status }}</span></td>
+            <td>{{ o.total_amount|inr }}</td>
+            <td><a href="{{ url_for('admin_order', oid=o.id) }}">Manage</a></td>
+        </tr>
+    {% else %}
+        <tr><td colspan="7" class="muted">No orders.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

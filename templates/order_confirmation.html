@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Order {{ order.order_number }}{% endblock %}
+{% block content %}
+<div class="confirm-head">
+    <h1>Thank you!</h1>
+    <p>Your order <strong>{{ order.order_number }}</strong> has been placed.</p>
+    <p>
+        <span class="badge status-{{ order.status|lower }}">{{ order.status }}</span>
+        <span class="badge cod-{{ order.cod_payment_status|lower }}">Payment: {{ order.cod_payment_status }}</span>
+    </p>
+</div>
+
+<div class="two-col">
+    <section class="panel">
+        <h2>Items</h2>
+        <table class="table">
+            <thead><tr><th>Product</th><th>Unit price</th><th>Qty</th><th>Line total</th></tr></thead>
+            <tbody>
+            {% for it in items %}
+                <tr>
+                    <td>{{ it.product_name_snapshot }}</td>
+                    <td>{{ it.unit_price|inr }}</td>
+                    <td>{{ it.quantity }}</td>
+                    <td>{{ it.line_total|inr }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="row"><span>Subtotal</span><span>{{ order.subtotal|inr }}</span></div>
+        <div class="row"><span>Shipping</span><span>{{ order.shipping_amount|inr }}</span></div>
+        <div class="row"><span>Tax</span><span>{{ order.tax_amount|inr }}</span></div>
+        <div class="row total"><span>Total</span><span>{{ order.total_amount|inr }}</span></div>
+    </section>
+
+    <aside class="panel">
+        <h2>Delivery</h2>
+        <p>{{ order.shipping_address_snapshot }}</p>
+        <p class="muted">Placed on {{ order.created_at }}</p>
+
+        <h2>Status history</h2>
+        <ol class="timeline">
+            {% for h in history %}
+            <li><strong>{{ h.status }}</strong><br><span class="muted">{{ h.created_at }}</span></li>
+            {% endfor %}
+        </ol>
+        <a class="btn full" href="{{ url_for('account_orders') }}">Back to my orders</a>
+    </aside>
+</div>
+{% endblock %}

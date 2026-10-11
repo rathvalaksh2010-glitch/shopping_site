@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name }}{% endblock %}
+{% block content %}
+<h1 class="page-title">{{ category.name }}</h1>
+{% if category.description %}<p class="muted">{{ category.description }}</p>{% endif %}
+
+<form class="filters" method="GET" action="{{ url_for('category', slug=category.slug) }}">
+    <select name="sort">
+        <option value="newest" {% if request.args.get('sort','newest')=='newest' %}selected{% endif %}>Newest</option>
+        <option value="price_asc" {% if request.args.get('sort')=='price_asc' %}selected{% endif %}>Price: low to high</option>
+        <option value="price_desc" {% if request.args.get('sort')=='price_desc' %}selected{% endif %}>Price: high to low</option>
+        <option value="name" {% if request.args.get('sort')=='name' %}selected{% endif %}>Name</option>
+    </select>
+    <button class="btn sm" type="submit">Apply</button>
+</form>
+
+{% if products %}
+<div class="grid">
+    {% for p in products %}{% include "_product_card.html" %}{% endfor %}
+</div>
+{% else %}
+<p class="muted">No products in this category yet.</p>
+{% endif %}
+{% endblock %}
